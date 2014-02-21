@@ -17,7 +17,7 @@ def stop_sphero():
 def roll(speed, heading):
     s.roll(speed * 2.55, heading)
 
-menu("onOff",["on", "off"])
+menu("onOff", ["on", "off"])
 @command("turn stabilization %m.onOff")
 def set_stability(onOff="on"):
 	if onOff == "on":
@@ -27,9 +27,9 @@ def set_stability(onOff="on"):
 
 @command("set color r: %n g: %n b: %n")
 def set_color(r, g, b):
-    s.set_rgb(r,g,b)
+    s.set_rgb(r, g, b)
 
-menu("onOff",["on", "off"])
+menu("onOff", ["on", "off"])
 @command("turn back LED %m.onOff")
 def back_led(onOff="on"):
 	if onOff == "on":
@@ -49,6 +49,9 @@ def get_name():
 def reset_sphero():
     s.stop(0, 0)
 
+
+
+# TODO find the Sphero automatically
 port = raw_input("What port is your Sphero on? ")
 s = sphero.Sphero(port)
 s.connect()
@@ -59,4 +62,5 @@ time.sleep(5)
 s.set_heading(0)
 s.set_back_led_output(0)
 s.set_stabilization(1)
+
 blockext.run("Orbotix Sphero", "sphero", 7575)
