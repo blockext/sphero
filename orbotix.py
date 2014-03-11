@@ -52,8 +52,11 @@ def reset_sphero():
 
 
 # TODO find the Sphero automatically
-port = raw_input("What port is your Sphero on? ")
-s = sphero.Sphero(port)
+try:
+    s = sphero.Sphero()
+except:
+    port = raw_input("What port is your Sphero on? ")
+    s = sphero.Sphero(port)
 s.connect()
 s.set_back_led_output(255)
 s.set_stabilization(0)
