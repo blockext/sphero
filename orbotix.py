@@ -1,69 +1,59 @@
-from __future__ import division
-
-import time
-
-import blockext
 from blockext import *
-
 import sphero
 
 
+class Sphero:
+    def __init__(self):
+        self.bot = sphero.Sphero()
+        self.bot.connect()
+        self.name = self.bot.get_bluetooth_info().name
+        
+    """def _is_connected(self):
+        try:
+            self.bot.get_bluetooth_info()
+        except:
+            self.bot = False
+        
+        if not self.bot:
+            try:
+                self.bot.connect()
+                self.name = self.bot.get_bluetooth_info().name
+            except:
+                pass
+            return bool(self.bot)"""
+    
+    def _problem(self):
+        if not self.bot:
+            return "Your Sphero is not connected"
+    
+    def _on_reset(self):
+        self.bot.roll(0,0)
+    def get_sphero_name(self):
+        return self.name
+    
+    def set_sphero_name(self, name):
+        self.name = name
+        self.bot.set_device_name(name)
+        
+    def roll_sphero(self, power, heading):
+        self.bot.roll(power*2.55, heading)
+        
+    """def set_sphero_color(self, r, g, b):
+        self.bot.set_rgb(r,g,b)"""
+    
 
-@command("stop Sphero")
-def stop_sphero():
-    s.roll(0, 0)
+descriptor = Descriptor(
+    name = "Orbotix Sphero",
+    port = 7575,
+    blocks = [
+        Block('roll_sphero', 'command', 'roll Sphero %n percent speed at %n degrees', defaults=[100,0]),
+        Block('get_sphero_name', 'reporter', 'get Sphero name'),
+        Block('set_sphero_name', 'command', 'set Sphero name to %s', defaults=['Rob Orb'])
+        
+    ]
+)
 
-@command("roll %n percent speed at %n degrees")
-def roll(speed, heading):
-    s.roll(speed * 2.55, heading)
+extension = Extension(Sphero, descriptor)
 
-menu("onOff", ["on", "off"])
-@command("turn stabilization %m.onOff")
-def set_stability(onOff="on"):
-	if onOff == "on":
-	    s.set_stabilization(1)
-	else:
-		s.set_stabilization(0)
-
-@command("set color r: %n g: %n b: %n")
-def set_color(r, g, b):
-    s.set_rgb(r, g, b)
-
-menu("onOff", ["on", "off"])
-@command("turn back LED %m.onOff")
-def back_led(onOff="on"):
-	if onOff == "on":
-		s.set_back_led_output(255)
-	else:
-		s.set_back_led_output(0)
-
-@command("set Sphero name to %s")
-def set_name(name):
-    s.set_device_name(name)
-
-@reporter("get Sphero name")
-def get_name():
-    return s.get_bluetooth_info().name
-
-@reset
-def reset_sphero():
-    s.stop(0, 0)
-
-
-
-# TODO find the Sphero automatically
-try:
-    s = sphero.Sphero()
-except:
-    port = raw_input("What port is your Sphero on? ")
-    s = sphero.Sphero(port)
-s.connect()
-s.set_back_led_output(255)
-s.set_stabilization(0)
-print "Turn the Sphero until the blue light points toward you"
-time.sleep(5)
-s.set_heading(0)
-s.set_back_led_output(0)
-s.set_stabilization(1)
-
-blockext.run("Orbotix Sphero", "sphero", 7575)
+if __name__ == '__main__':
+    extension.run_forever(debug=True)
