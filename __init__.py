@@ -1,45 +1,51 @@
+from __future__ import (absolute_import, division,
+                        print_function, unicode_literals)
+from future.builtins import *
+
 from blockext import *
+
 import sphero
 
+__version__ = '0.2'
 
 class Sphero:
     def __init__(self):
-        self.bot = sphero.Sphero()
-        self.bot.connect()
-        self.name = self.bot.get_bluetooth_info().name
+        self.robot = sphero.Sphero()
+        self.robot.connect()
+        self.name = self.robot.get_bluetooth_info().name
         
     """def _is_connected(self):
         try:
-            self.bot.get_bluetooth_info()
+            self.robot.get_bluetooth_info()
         except:
-            self.bot = False
+            self.robot = False
         
-        if not self.bot:
+        if not self.robot:
             try:
-                self.bot.connect()
-                self.name = self.bot.get_bluetooth_info().name
+                self.robot.connect()
+                self.name = self.robot.get_bluetooth_info().name
             except:
                 pass
-            return bool(self.bot)"""
+            return bool(self.robot)"""
     
     def _problem(self):
-        if not self.bot:
+        if not self.robot:
             return "Your Sphero is not connected"
     
     def _on_reset(self):
-        self.bot.roll(0,0)
+        self.robot.roll(0,0)
     def get_sphero_name(self):
         return self.name
     
     def set_sphero_name(self, name):
         self.name = name
-        self.bot.set_device_name(name)
+        self.robot.set_device_name(name)
         
     def roll_sphero(self, power, heading):
-        self.bot.roll(power*2.55, heading)
+        self.robot.roll(power*2.55, heading)
         
     """def set_sphero_color(self, r, g, b):
-        self.bot.set_rgb(r,g,b)"""
+        self.robot.set_rgb(r,g,b)"""
     
 
 descriptor = Descriptor(
