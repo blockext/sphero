@@ -6,7 +6,7 @@ from blockext import *
 
 import sphero
 
-__version__ = '0.2'
+__version__ = '0.2.1'
 
 class Sphero:
     def __init__(self):
